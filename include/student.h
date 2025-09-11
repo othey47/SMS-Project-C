@@ -14,7 +14,7 @@ typedef struct student
 
 void addStudent();
 void listStudents();
-void searchStudent();
+int searchStudent();
 void updateStudent();
 void deleteStudent();
 
