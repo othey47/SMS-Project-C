@@ -3,15 +3,16 @@
 
 typedef struct student 
 {
-    int id; 
+    unsigned int id; 
     char name[50];
-    int age;
+    unsigned age;
     char email[50];
     float grade;
 } Student;
 
 // Function Prototypes 
 
+int initStudentSys();
 void addStudent();
 void listStudents();
 int searchStudent();
