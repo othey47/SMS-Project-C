@@ -34,7 +34,7 @@ int main()
 
         switch (choice) {
             case 1: // Add students
-            addStudent();
+                addStudent();
 
                 break;
 
