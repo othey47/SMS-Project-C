@@ -35,6 +35,7 @@ int initStudentSys()
 void addStudent()
 {
 
+    // check if storage if full.
     if(student_count >= capacity)
     {
         printf("The space is full \n");
@@ -44,35 +45,235 @@ void addStudent()
     Student s;
 
     int i = student_count;
-    
+
+
     printf("Enter information of student[%d]\n", i + 1);
 
-    printf("Enter ID of student[%d]: \n", i + 1);
-    scanf("%d", &s.id);
 
-    clearInputBuffer();
+    /* 1. ID :
+        1. User Input :
+        2. Error handling for input :
+            -> Check if input is numeric .
+            -> Check if input in range limits.
+            -> duplicate ids, it's already exists.
+    */
+   int idvalid = 0; // to check if input true or false
+   do
+   {
+        // Enter Input for ID :
+        printf("Enter ID of student[%d]: \n", i + 1);
+        int result = scanf("%u", &s.id);
 
-    printf("Enter Name of student[%d]: \n", i + 1);
-    fgets(s.name, sizeof(s.name), stdin);
-    trimNewline(s.name);
+        // Error handling for id :
+        // => First : Check if input is numeric .
+        if(result != 1)
+        {
+            printf("Invalid input!  Please enter a number id\n");
+            clearInputBuffer();
+            continue; // try again
+        }
+
+        clearInputBuffer();
+
+        // => Second : check range limits :
+        if (s.id > 1000) {
+            printf("Invalid input! : ID must be between 0 and 1000.\n");
+            continue;
+        }
+        // => Third: Check for duplicates (now we know s.id is valid)
+        int isDuplicate = 0;
+        
+        for (int j = 0; j < student_count; j++) {
+            if(s.id == students[j].id) {
+                printf("ID already exists! Please choose a different ID.\n");
+                isDuplicate = 1;
+                break;
+            }
+        }
+
+        if(isDuplicate) {
+            continue; // Retry input.
+        }
+
+
+        idvalid = 1;
+
+   } while (!idvalid);
+   
+
+   /* 2. Name :
+        1. User Input :
+        2. Error handling for input :
+            -> Check if input is empty.
+            -> Check if input is not letters.
+            -> Check if range it's correct.
+   */
+
+    int nameValid = 0;
+    do {
+
+        // 1. User input :
+        printf("Enter Name of student[%d]: ", i + 1);
+        fgets(s.name, sizeof(s.name), stdin);
+        trimNewline(s.name);
+    
+        // 2. Error handling for Name : 
+        //  => First : Check if empty.
+        if (strlen(s.name) == 0) {
+            printf("Name cannot be empty!\n");
+            continue;
+        }
+    
+        // => Second : Check length.
+        if (strlen(s.name) < 2 || strlen(s.name) > 49) {
+            printf("Name must be between 2 and 49 characters.\n");
+            continue;
+        }
+    
+        // => Third : Check for valid characters only
+        if (isValidName(s.name) != 0) {
+            printf("Invalid characters! Use only letters, spaces, apostrophes, and hyphens.\n");
+            continue;
+        }
+    
+        nameValid = 1;
+    
+    } while (nameValid == 0);
+     
     
 
-    printf("Enter Age of student[%d]: \n", i + 1);
-    scanf("%d", &s.age);
+    /* 3. Age :
+        1. Input User :
+        2. Error handling for input :
+            -> check if input is numeric .
+            -> check if input in range limits.
 
-    clearInputBuffer();
+    */
+    int agevalid = 0; // to check if input true or false :
+    do
+    {
 
-    printf("Enter email of student[%d]: \n", i + 1);
-    fgets(s.email, sizeof(s.email), stdin);
-    trimNewline(s.email);
+        // 1. Enter Input for age :
+        printf("Enter Age of student[%d]: \n", i + 1);      
+        int result = scanf("%u", &s.age);
+        
+        // 2. Eror handling for age :
+        // => First : Invalid non-sensible input :
+        if(result != 1)
+        {
+            printf("Invalid input! Please enter a number.\n");
+            clearInputBuffer();
+            continue; // try again
+        } 
 
-    printf("Enter grade of student[%d]: \n", i + 1);
-    scanf("%f", &s.grade);
+        clearInputBuffer();
 
-    clearInputBuffer();
+        // => Second : Check range limits :
+        if(s.age < 7 || s.age > 30)
+        {
+            printf("Age must be between 7 and 30 \n");
+            continue; // try again
+        }
+
+        agevalid = 1;
+
+        
+    } while (!agevalid);
+
+    /* 4. Email :
+        1. Input User :
+        2. Error handling for input :
+            -> check if input is Empty.
+            -> check if input in range limits.
+            -> check basic email format.
+            -> check if email duplicate .
+    */
+    int emailValid = 0;
+    do
+    {
+        // 1. Enter User :
+        printf("Enter Email of student[%d]: \n", i + 1); 
+        fgets(s.email, sizeof(s.email), stdin);
+        trimNewline(s.email);
+    
+        // 2. Error handling for email :
+        // => First : Check if empty :
+        if(strlen(s.email) == 0)
+        {
+            printf("Email cannot be empty!\n");
+            continue;
+        }   
+
+        // => Second : check length limits.
+        if(strlen(s.email) > 50) // Adjust size as needed
+        {
+            printf("Email too long!. \n");
+            continue;
+        }
+
+        // => Third : check basic email format.
+        if (isValidEmail(s.email) != 0) // fixed
+        {
+            printf("Invalid email format!.\n");
+            continue;
+        }
+
+        // => Fourth : Check for duplicates
+        int isDuplicate = 0;
+        for (int j = 0; j < student_count; j++) {
+            if(strcmp(s.email, students[j].email) == 0) {
+                printf("Email already exists! .\n");
+                isDuplicate = 1;
+                break;
+            }
+        }
+
+        if(isDuplicate) {
+            continue; // Retry input.
+        }
+
+        emailValid = 1; // all checks passed, exit loop
+
+    } while (emailValid == 0);
+
+
+    /* 1. Grade :
+        1. User Input :
+        2. Error handling for input :
+            -> Check if input is numeric .
+            -> Check if input in range limits.
+    */
+   int gradevalid = 0; // to check if input true or false
+   do
+   {
+        // Enter Input for Grade :
+        printf("Enter grade of student[%d]: \n", i + 1);
+        int result = scanf("%f", &s.grade);
+
+        // Error handling for Grade :
+        // => First : Check if input is numeric .
+        if(result != 1)
+        {
+            printf("Invalid input!  Please enter a number Grade\n");
+            clearInputBuffer();
+            continue; // try again
+        }
+
+        clearInputBuffer();
+
+        // => Second : Check Range Limits :
+        if(s.grade < 0.00 || s.grade > 20.00)
+        {
+            printf("Grade must be between 0.00 and 20.00\n");
+            continue;
+        }
+
+        gradevalid = 1;
+
+   } while (!gradevalid);
 
     students[student_count++] = s;
-    
+
     printf("Student added successfully! \n");
 
 }
@@ -114,7 +315,7 @@ int searchStudent()
         return -1;
     }
 
-    int search_id;
+    unsigned search_id;
     printf("Enter the ID for search \n");
     scanf("%d", &search_id);
     clearInputBuffer(); // clear leftover newline.
@@ -200,7 +401,7 @@ void updateStudent()
 // Delete Student
 void deleteStudent()
 {
-    int index = searchStudents();  // search and display student
+    int index = searchStudent();  // search and display student
     if (index == -1) {
         printf("Student not found. Cannot delete.\n");
         return;
