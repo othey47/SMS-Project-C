@@ -6,7 +6,7 @@ CFLAGS = -Wall -Wextra -std=c11 -Iinclude
 SRCDIR = src
 INCDIR = include
 BUILDDIR = build
-TARGET = student_program
+TARGET = SMS
 
 # Source and object files
 SRCS = $(wildcard $(SRCDIR)/*.c)
