@@ -18,5 +18,6 @@ void listStudents();
 int searchStudent();
 void updateStudent();
 void deleteStudent();
+void freeStudents();
 
 #endif
