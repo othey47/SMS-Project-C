@@ -7,13 +7,12 @@
 // Create varibales global to call it from anywhere
 Student *students = NULL;
 int student_count = 0;
-int capacity = 0;
+int capacity = 1000;
 
 
 // init student system 
 int initStudentSys()
 {
-    capacity = 1000;
     student_count = 0;
 
     students = malloc(capacity * sizeof(Student));
@@ -31,7 +30,7 @@ int initStudentSys()
     }    
 }
 
-// Add Student
+// Add Student :
 void addStudent()
 {
 
@@ -76,7 +75,8 @@ void addStudent()
         clearInputBuffer();
 
         // => Second : check range limits :
-        if (s.id > 1000) {
+        if (s.id > 1000) 
+        {
             printf("Invalid input! : ID must be between 0 and 1000.\n");
             continue;
         }
@@ -278,47 +278,69 @@ void addStudent()
 
 }
 
-// List all Students
+// List all students :
 void listStudents()
 {
+    // Displays a formatted table of all students. Returns nothing.
+    if (students == NULL || student_count < 0) {
+        printf("Error: Student data is invalid.\n");
+        return;
+    }
     if(student_count == 0)
     {
-        printf("No students found. \n");
-        return ;
-    }
+        printf("No students found.\n");
+        return;
+    }   
+    
+    // Table header
+    printf("\n=============================== Students Table ================================\n");
+    printf("%-5s | %-49.49s | %-3s | %-49.49s | %-6s\n",          // All %s for strings
+           "ID", "Name", "Age", "Email", "Grade");
 
-        // Table header
-    printf("\n=============== Students Table ===============\n");
-    printf("ID\t| Name\t\t\t| Age\t| Email\t\t\t| Grade\n");
-    printf("-----------------------------------------------\n");
+    int line_length = 5 + 3 + 49 + 3 + 3 + 3 + 49 + 3 + 6; // sum of column widths + spaces/pipes
+    for (int i = 0; i < line_length; i++) putchar('-');
+    putchar('\n');
 
     // Print all students
     for (int i = 0; i < student_count; i++) 
     {
-        Student s = students[i];
 
-        printf("%d\t| %-16s\t| %d\t| %-16s\t| %.2f\t\n",
-               s.id, s.name, s.age, s.email, s.grade);
+        printf("%-5u | %-49.49s | %-3u | %-49.49s | %6.2f\n",  // Match data types
+               students[i].id, students[i].name, students[i].age, students[i].email, students[i].grade);
     }
 
-    printf("===============================================\n");
-
+    for (int i = 0; i < line_length; i++) putchar('=');
+    putchar('\n');
+    printf("Total students: %d\n", student_count);
 }
 
 // Search Student 
 int searchStudent()
 {
-        
-    if(student_count  == 0)
+    // check if student is empty , check is student record full.
+    if (students == NULL || student_count > capacity) // capacity = 1000;
+    {
+        printf("Error : Student data is invalid");
+        return -1;
+    }
+
+    // check is student counter it's empty.
+    if(student_count  <= 0)
     {
         printf("The student list is empty. \n");
         return -1;
     }
 
+    // check input failure :
     unsigned search_id;
+
     printf("Enter the ID for search \n");
-    scanf("%d", &search_id);
-    clearInputBuffer(); // clear leftover newline.
+    if(scanf("%u\n", &search_id) != 1 || search_id == 0)
+    {
+        printf("Error: invalid ID input. \n");
+        clearInputBuffer(); // clear leftover newline.
+        return -1;
+    }
 
     // Loop through all students.
 
@@ -326,73 +348,85 @@ int searchStudent()
     {
         if (students[i].id == search_id) 
         {
-            printf("\n============= Found Student =============\n");
-            printf("ID: %d | Name: %s | Age: %d | Email: %s | Grade: %.2f\n", students[i].id, students[i].name, students[i].age, students[i].email, students[i].grade);
+            printf("\n======================= Found Student ======================\n");
+            printf("ID: %u | Name: %s | Age: %u | Email: %s | Grade: %.2f\n", students[i].id, students[i].name, students[i].age, students[i].email, students[i].grade);
 
-            printf("========================================\n");
+            printf("==============================================================\n");
 
             return i;  // Found
         }
     }
-    printf("Student with ID %d not found. \n", search_id);
+    printf("Student with ID %u not found. \n", search_id);
     return -1;  // Not found
 }
 
 // Update Student 
 void updateStudent()
 {
+    // Search for the student by ID :
     int index = searchStudent();
-
+    
+    // check if the student record exists.
     if (index == -1) {
         printf("The student record was not found.\n");
         return;
     }
     
+    // Pointer to the student to simplify access.
     Student *s = &students[index];
-    char buffer[100];
+    char buffer[100]; // Temporary buffer for string input.
 
     printf("Updating information for student with ID: %d\n", students[index].id);
 
-    // Update Name :
+    // 2.Update Name :
+    // show current name and prompt for new input.
+    // Pressing Enter keeps the current name.
     printf("Current Name: %s\nEnter new Name (or press Enter to keep current): ", s->name);
     fgets(buffer, sizeof(buffer), stdin);
+    // Remove trailing newline from fgets.
     trimNewline(buffer);
     if(strlen(buffer) > 0) {
-        strncpy(s->name, buffer, sizeof(s->name));
+        // copy new name safely, ensuring null-termination.
+        strncpy(s->name, buffer, sizeof(s->name) -1);
+        s->name[sizeof(s->name) - 1] = '\0';
     }
     
     
-    // Update Age :
-     printf("Current Age: %d\nEnter new Age (or -1 to keep current): ", s->age);
+    // 3.Update Age :
+    // Show current age and prompt for new input.
+    // Entering a number >0 updates the age; otherwise, keeps the current value.
+    printf("Current Age: %d\nEnter new Age (or -1 to keep current): ", s->age);
     int newAge;
     scanf("%d", &newAge);
+    // clear leftover input from stdin.
     clearInputBuffer();
-    if (newAge != -1)
-    {
-        s->age = newAge;
-    }
+    if(newAge > 0) s->age = newAge;
+
     
 
-    // Update Email :
+    // 4.Update Email :
+    // Show current email and prompt for new input.
+    // Pressing Enter keeps the current email.
     printf("Current Email: %s\nEnter new Email (or press Enter to keep current): ", s->email);
     fgets(buffer, sizeof(buffer), stdin);
     trimNewline(buffer);
     if (strlen(buffer) > 0)
     {
-        strncpy(s->email, buffer, sizeof(s->email));
+        // Copy new email safelt, ensuring null-termination.
+        strncpy(s->email, buffer, sizeof(s->email) - 1);
+        s->email[sizeof(s->email) - 1] = '\0';
     }
     
 
-    // Update Grade :
+    // 5.Update Grade :
+    // Show current grade and prompt for new input.
+    // Entering a number between 0 and 20 updates the grade; otherwise, keeps the current value.
     printf("Current Grade: %.2f\nEnter new Grade (or -1 to keep current): ", s->grade);
     float newGrade;
     scanf("%f", &newGrade);    
     clearInputBuffer();
-    if(newGrade != -1)
-    {
-        s->grade = newGrade;
-    }
-
+    if(newGrade >= 0.0 && newGrade <= 20.00) s->grade = newGrade;
+    // Confirm update completion.
     printf("\nInformation updated successfully.\n");
 
 }
@@ -401,7 +435,10 @@ void updateStudent()
 // Delete Student
 void deleteStudent()
 {
-    int index = searchStudent();  // search and display student
+    // Search for the student by ID :
+    int index = searchStudent();
+
+    // check if the student record exists.
     if (index == -1) {
         printf("Student not found. Cannot delete.\n");
         return;
@@ -429,6 +466,15 @@ void deleteStudent()
     printf("Student deleted successfully!\n");
 }
 
+void freeStudents()
+{
+    if (students == NULL) return;
 
+    // Only free the array if it was dynamically allocated
+    free(students);
+    students = NULL;
+    student_count = 0;
+    capacity = 0;
 
-
+    printf("All student records have been freed from memory.\n");
+}
