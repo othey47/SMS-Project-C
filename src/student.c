@@ -6,8 +6,9 @@
 
 // Create varibales global to call it from anywhere
 Student *students = NULL;
-int student_count = 0;
-int capacity = 1000;
+#define DEFAULT_CAPACITY 1000
+int capacity = DEFAULT_CAPACITY;
+int student_count;
 
 
 // init student system 
@@ -15,18 +16,37 @@ int initStudentSys()
 {
     student_count = 0;
 
-    students = malloc(capacity * sizeof(Student));
-
-    if(students == NULL)
+    // Check if array already allocated before allocating.
+    if(students != NULL)
     {
-        // Handle allocation failare
-        printf("Allocation Failed\n");
-        return 1;
+
+        free(students);
+        students = NULL; // reset array to NULL.
+    }
+
+    // check capacity size it's not 0 or negative.
+    if(capacity > 0)
+    {
+        students = malloc(capacity * sizeof(Student));
     }
     else
     {
-        printf("Allocation Success \n");
-        return 0;
+        printf("Error: capacity must be greater than 0\n");
+        return(EXIT_FAILURE);
+    }
+
+    // check students it's allocated or still Null.
+    if(students == NULL)
+    {
+        //Handle allocation failure.
+        printf("Allocation Failed\n");
+        return(EXIT_FAILURE);
+    }
+    else
+    {   
+        // Handle allocation success.
+        printf("Allocation Success\n");
+        return(EXIT_SUCCESS);
     }    
 }
 
@@ -335,9 +355,9 @@ int searchStudent()
     unsigned search_id;
 
     printf("Enter the ID for search \n");
-    if(scanf("%u\n", &search_id) != 1 || search_id == 0)
+    if(scanf("%u", &search_id) != 1 || search_id == 0)
     {
-        printf("Error: invalid ID input. \n");
+        printf("\nError: invalid ID input. \n");
         clearInputBuffer(); // clear leftover newline.
         return -1;
     }
