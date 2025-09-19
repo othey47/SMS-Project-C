@@ -1,6 +1,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <ctype.h>
+#include <stdbool.h>
 #include "utils.h"
 
 void trimNewline(char *str){
@@ -19,7 +20,7 @@ void clearInputBuffer()
 }
 
 
-int isValidName(char *name)
+bool isValidName(char *name)
 {
     // Helper function to check if name has valid characters only
     for (int i = 0; name[i] != '\0'; i++) {
@@ -27,15 +28,15 @@ int isValidName(char *name)
         
         // Allow: letters, spaces, apostrophes, hyphens
         if (!(isalpha(c) || c == ' ' || c == '\'' || c == '-')) {
-            return 1;  // Invalid character found
+            return false;  // Invalid character found
         }
     }
-    return 0;  // All characters are valid
+    return true;  // All characters are valid
 }
 
 
 
-int isValidEmail(const char *email)
+bool isValidEmail(const char *email)
 {
     int atCount = 0;
     int atPosition = -1;
@@ -43,7 +44,7 @@ int isValidEmail(const char *email)
 
     // Reject empty input here if you want
     if(len == 0) {
-        return 1; // invalid
+        return false; // invalid
     }
 
     // Scan characters
@@ -53,13 +54,13 @@ int isValidEmail(const char *email)
             atPosition = i;
         }
         if(isspace((unsigned char)email[i])) {
-            return 1; // invalid: spaces not allowed
+            return false; // invalid: spaces not allowed
         }
     }
 
     // Must have exactly one '@', not at start or end
     if(atCount != 1 || atPosition == 0 || atPosition == len - 1) {
-        return 1; // invalid
+        return false; // invalid
     }
 
     // Must have '.' after '@'
@@ -72,8 +73,8 @@ int isValidEmail(const char *email)
     }
 
     if(!dotAfterAt) {
-        return 1; // invalid
+        return false; // invalid
     }
 
-    return 0; // valid
+    return true; // valid
 }
