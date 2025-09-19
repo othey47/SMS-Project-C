@@ -9,9 +9,9 @@ void clearInputBuffer();
 
 
 // Check if name it's valid 
-int isValidName(char *name);
+bool isValidName(char *name);
 
 // Check if email it's valid
-int isValidEmail(const char *email);
+bool isValidEmail(const char *email);
 
 #endif
