@@ -19,8 +19,19 @@ void updateStudent();
 void deleteStudent();
 void freeStudents();
 
-// Validation Functions Prototypes
-bool validate_id();
-bool validate_name();
+// Validation Functions Prototypes :
+
+// validate id input :
+bool validate_id(unsigned id_input,int scanf_value);
+
+// validate name input :
+bool validate_name(char *name);
+
+// validate age input :
+bool validate_age(unsigned age_input, int scanf_value);
+
+// validate grade input :
+bool validate_grade(float grade_input, int scanf_value);
+
 
 #endif

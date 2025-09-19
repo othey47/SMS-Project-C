@@ -190,6 +190,7 @@ bool validate_grade(float grade_input, int scanf_value)
         return false; // not valid
     }
 
+    return true; // valid
 }
 
 // Add Student :

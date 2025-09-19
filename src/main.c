@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdbool.h>
 #include "student.h"
 #include "utils.h"
 

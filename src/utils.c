@@ -10,7 +10,6 @@ void trimNewline(char *str){
     {
         str[len - 1] = '\0';
     }
-    
 }
 
 void clearInputBuffer()

@@ -7,7 +7,6 @@ void trimNewline(char *str);
 // Claer Input from Buffers .
 void clearInputBuffer();
 
-
 // Check if name it's valid 
 bool isValidName(char *name);
 
