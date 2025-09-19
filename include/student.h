@@ -11,7 +11,6 @@ typedef struct student
 } Student;
 
 // Function Prototypes 
-
 int initStudentSys();
 void addStudent();
 void listStudents();
@@ -19,5 +18,9 @@ int searchStudent();
 void updateStudent();
 void deleteStudent();
 void freeStudents();
+
+// Validation Functions Prototypes
+bool validate_id();
+bool validate_name();
 
 #endif
