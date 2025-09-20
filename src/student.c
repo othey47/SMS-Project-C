@@ -348,7 +348,7 @@ void listStudents()
     }   
     
     // Table header
-    printf("\n=============================== Students Table ================================\n");
+    printf("\n========================================= Students Table =========================================\n");
     printf("%-5s | %-49.49s | %-3s | %-49.49s | %-6s\n",          // All %s for strings
            "ID", "Name", "Age", "Email", "Grade");
 
@@ -430,58 +430,159 @@ void updateStudent()
     
     // Pointer to the student to simplify access.
     Student *s = &students[index];
-    char buffer[100]; // Temporary buffer for string input.
+    char buffer[50]; // Temporary buffer for string input.
 
     printf("Updating information for student with ID: %d\n", students[index].id);
 
-    // 2.Update Name :
-    // show current name and prompt for new input.
-    // Pressing Enter keeps the current name.
-    printf("Current Name: %s\nEnter new Name (or press Enter to keep current): ", s->name);
-    fgets(buffer, sizeof(buffer), stdin);
-    // Remove trailing newline from fgets.
-    trimNewline(buffer);
-    if(strlen(buffer) > 0) {
-        // copy new name safely, ensuring null-termination.
-        strncpy(s->name, buffer, sizeof(s->name) -1);
-        s->name[sizeof(s->name) - 1] = '\0';
-    }
-    
-    
-    // 3.Update Age :
-    // Show current age and prompt for new input.
-    // Entering a number >0 updates the age; otherwise, keeps the current value.
-    printf("Current Age: %d\nEnter new Age (or -1 to keep current): ", s->age);
-    int newAge;
-    scanf("%d", &newAge);
-    // clear leftover input from stdin.
-    clearInputBuffer();
-    if(newAge > 0) s->age = newAge;
+    /* 1. Update Name :
+          1. Show current value & ask for new input.
+          2. User pressed enter -> keep old name.
+          3. Check validation for input.
+          4. Update only if valid.
+   */
+    bool New_nameValid = false;
+    do {
 
-    
+        // Show current value :
+        printf("Current Name: %s\nEnter new Name (or press Enter to keep current): ", s->name);
 
-    // 4.Update Email :
-    // Show current email and prompt for new input.
-    // Pressing Enter keeps the current email.
-    printf("Current Email: %s\nEnter new Email (or press Enter to keep current): ", s->email);
-    fgets(buffer, sizeof(buffer), stdin);
-    trimNewline(buffer);
-    if (strlen(buffer) > 0)
+        fgets(buffer, sizeof(buffer), stdin);
+        trimNewline(buffer);
+
+        // User pressed enter -> keep old name.
+        if(strlen(buffer) == 0)
+        {
+            New_nameValid = true;
+            break;
+        }
+
+        // Check validation for input : 
+        New_nameValid = validate_name(buffer);
+
+        // Update only if valid.
+        if (New_nameValid)
+        {
+            strcpy(s->name, buffer); 
+        }
+    
+    } while (!New_nameValid);
+    
+    
+    
+   /* 2.Update Age :
+        1. Show current value & ask for new input.
+        2. Read input safely.
+        3. Check if user wants to keep old value.
+        4. Validation input.
+        5. Update record if valid.
+    */
+    bool New_ageValid = false; // to check if input true or false :
+    do
     {
-        // Copy new email safelt, ensuring null-termination.
-        strncpy(s->email, buffer, sizeof(s->email) - 1);
-        s->email[sizeof(s->email) - 1] = '\0';
-    }
-    
+        // 1. Show current value & ask for new input.
+        printf("Current Age: %d\nEnter new Age (or -1 to keep current): ", s->age);
 
-    // 5.Update Grade :
-    // Show current grade and prompt for new input.
-    // Entering a number between 0 and 20 updates the grade; otherwise, keeps the current value.
-    printf("Current Grade: %.2f\nEnter new Grade (or -1 to keep current): ", s->grade);
-    float newGrade;
-    scanf("%f", &newGrade);    
-    clearInputBuffer();
-    if(newGrade >= 0.0 && newGrade <= 20.00) s->grade = newGrade;
+        // 2. Read input safely :
+        int newAge;
+        int scanf_value = scanf("%d", &newAge);
+
+        // remove any leftover input.
+        clearInputBuffer();
+
+        // 3.Check if user wants to keep old value.
+        if(newAge == -1)
+        {
+            New_ageValid = true;  // valid choice (keep old)
+            break;
+        }
+
+        // 4.Check for validation of input :
+        New_ageValid = validate_age(newAge, scanf_value);
+
+        // 5.Update record if valid
+        if (New_ageValid)
+        {
+            s->age = newAge;
+        }
+
+        
+    } while (!New_ageValid);
+
+    
+   /* 4.Update Email :
+        1. Show current & ask for new input.
+        2. Read input safely.
+        3. Check if user wants to keep old value.
+        4. Validate input.
+        5. Update record if valid.
+   */
+   bool New_emailValid = false; // to check if input true or false :
+   do
+   {
+        // 1. Show current & ask for new input.
+        printf("Current Email: %s\nEnter new Email (or press Enter to keep current): ", s->email);
+        
+        // 2, Read input safely.
+        fgets(buffer, sizeof(buffer), stdin);
+        trimNewline(buffer);
+        
+        // 3. Check if user wants to keep old value.
+        if(strlen(buffer) == 0)
+        {
+            New_emailValid = true;
+            break;
+        }
+
+        // 4. Validate input.
+        New_emailValid = validate_email(buffer);
+
+        // 5. Update record if valid .
+        if(New_emailValid)
+        {
+            strcpy(s->email, buffer);
+        }
+
+   } while (!New_emailValid);
+   
+   
+   /* 5.Update Grade :
+        1. Show current value & ask for new input.
+        2. Read input safely.
+        3. Check if the user wants to keep the old value.
+        4. Validate input.
+        5. Update record if valid.
+   */
+   bool New_gradeValid = false; // to check if input true or false :
+   do
+   {
+        // 1. Show current value & ask for new input.
+        printf("Current Grade: %.2f\nEnter new Grade (or -1 to keep current): ", s->grade);
+
+        // 2.Read input safely.
+        float newGrade;
+        int scanf_value = scanf("%f", &newGrade);
+
+        // remove any leftover input.
+        clearInputBuffer();
+
+        // 3. Check if the user wants to keep the old value.
+        if(newGrade == -1)
+        {
+            New_gradeValid = true;  // valid choice (keep old)
+            break;
+        }
+
+        // 4. Validate input.
+        New_gradeValid = validate_grade(newGrade, scanf_value);
+
+        // 5. Update record if valid.
+        if (New_gradeValid)
+        {
+            s->grade = newGrade;
+        }
+        
+   } while (!New_gradeValid);
+   
     // Confirm update completion.
     printf("\nInformation updated successfully.\n");
 
@@ -500,18 +601,32 @@ void deleteStudent()
         return;
     }
 
-    // Optional: confirm deletion
+
     char confirm;
-    printf("Are you sure you want to delete student %s with ID %d? (y/n): ",
-           students[index].name, students[index].id);
-    scanf(" %c", &confirm);
-    clearInputBuffer();
+    do
+    {
+        // Input validation for confirmation :
+        printf("Are you sure you want to delete student %s with ID %d? (y/n): ", students[index].name, students[index].id);
 
-    if (confirm != 'y' && confirm != 'Y') {
-        printf("Deletion cancelled.\n");
-        return;
-    }
+        int scanf_value = scanf(" %c",&confirm); // note the & and space
 
+        clearInputBuffer();
+
+        // Check if input it correct.
+        if(scanf_value != 1)
+        {
+            printf("Input invalid : Deletion cancelled\n");
+            return;
+        }
+
+        if (confirm == 'n' || confirm == 'N')
+        {
+            printf("Deletion cancelled.\n");
+            return;
+        }
+
+    } while (confirm != 'y' && confirm != 'Y');
+    
     // Shift array elements to remove the student
     for (int i = index; i < student_count - 1; i++) {
         students[i] = students[i + 1];
@@ -522,6 +637,7 @@ void deleteStudent()
     printf("Student deleted successfully!\n");
 }
 
+// Free Student
 void freeStudents()
 {
     if (students == NULL) return;
