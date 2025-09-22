@@ -25,6 +25,16 @@ int main()
         printf("The allocation failed, try again\n");
         return 1; // exit program
     }
+
+    if (loadStudentsFromFile(student_file))
+    {
+        printf("Students loaded successfully.\n");
+    }
+    else
+    {
+        printf("No students loaded (file may not exist yet).\n");
+    }
+
     
 
     // Menu loop: continues until user chooses to exit
@@ -36,7 +46,9 @@ int main()
         switch (choice) {
             case 1: // Add students
                 addStudent();
-
+                if (!saveStudentsToFile(student_file))
+                    printf("Warning: Faild to save students!\n");
+                
                 break;
 
             case 2: // Display All Students
@@ -49,10 +61,16 @@ int main()
 
             case 4: // Update Student
                 updateStudent();
+                if (!saveStudentsToFile(student_file))
+                    printf("Warning: Faild to save students!\n");
+                
                 break;
 
             case 5: // Delete Student
                 deleteStudent();
+                if (!saveStudentsToFile(student_file))
+                    printf("Warning: Failed to save students!\n");
+                
                 break;
 
             case 0: // Exit program
