@@ -10,6 +10,9 @@ typedef struct student
     float grade;
 } Student;
 
+// Varibale for store name src of file :
+extern const char *student_file; // declare it as extern
+
 // Function Prototypes 
 int initStudentSys();
 void addStudent();
@@ -20,18 +23,14 @@ void deleteStudent();
 void freeStudents();
 
 // Validation Functions Prototypes :
-
-// validate id input :
 bool validate_id(unsigned id_input,int scanf_value);
-
-// validate name input :
 bool validate_name(char *name);
-
-// validate age input :
 bool validate_age(unsigned age_input, int scanf_value);
-
-// validate grade input :
 bool validate_grade(float grade_input, int scanf_value);
+
+// File Handling Function Prototypes :
+bool saveStudentsToFile(const char *student_file);
+bool loadStudentsFromFile(const char *student_file);
 
 
 #endif
