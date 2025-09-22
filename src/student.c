@@ -10,6 +10,7 @@ Student *students = NULL;
 #define DEFAULT_CAPACITY 1000
 int capacity = DEFAULT_CAPACITY;
 int student_count;
+const char *student_file = "data/students.dat";
 
 
 // init student system :
@@ -208,7 +209,6 @@ void addStudent()
 
     int i = student_count;
 
-
     printf("Enter information of student[%d]\n", i + 1);
 
 
@@ -329,7 +329,18 @@ void addStudent()
 
     students[student_count++] = s;
 
-    printf("Student added successfully! \n");
+   // Save student record in file :
+
+    bool valid_save = saveStudentsToFile(student_file);
+
+    if(!valid_save)
+    {
+        printf("Student added failaire : problem with saving \n");
+    }
+    else
+    {
+        printf("Student added successfully! \n");
+    }
 
 }
 
@@ -348,7 +359,7 @@ void listStudents()
     }   
     
     // Table header
-    printf("\n========================================= Students Table =========================================\n");
+    printf("\n====================================================== Students Table ======================================================\n");
     printf("%-5s | %-49.49s | %-3s | %-49.49s | %-6s\n",          // All %s for strings
            "ID", "Name", "Age", "Email", "Grade");
 
@@ -649,4 +660,70 @@ void freeStudents()
     capacity = 0;
 
     printf("All student records have been freed from memory.\n");
+}
+
+bool saveStudentsToFile(const char *student_file)
+{
+    // 1. Open the file in write mode.
+    FILE *file = fopen(student_file, "wb"); // "wb" = write binary
+
+    // 2. Check if file opened successfuly.
+    if (file == NULL) {
+        printf("Error opening students.dat\n");
+        return false;
+    }
+        
+    // 3. Loop through all students.
+    for (int i = 0; i < student_count; i++)
+    {
+        // check if fwrite fails or success.
+        if(fwrite(&students[i], sizeof(Student), 1, file) != 1)
+        {
+            printf("Error writing student %d to file\n", i);
+            fclose(file);
+            return false; // not valid
+        }
+    }
+
+
+    // 4. Close the file.
+    fclose(file);
+
+    return true;
+
+}
+
+bool loadStudentsFromFile(const char *student_file)
+{
+    // 1. Open the file in read mode (rb = read binary).
+    FILE *file = fopen(student_file, "rb");
+
+    // 2. Check if the file opened successfuly.
+    if (file == NULL)
+    {
+        perror("Error opening failed \n");
+        return false; // not valid
+    }
+
+    // Rest student count before loading.
+    student_count = 0;
+
+    // 3. Read students one by.
+    while(student_count < capacity && fread(&students[student_count], sizeof(Student), 1,file) == 1)
+    {
+        student_count++;
+    }
+    
+    // 4. Check for read errors :
+    if(ferror(file))
+    {
+        perror("Error reading from file \n");
+        fclose(file);
+        return false; // not 
+    }
+
+    // 5, Close the file 
+    fclose(file);
+
+    return true; // valid
 }
