@@ -8,6 +8,10 @@ INCDIR = include
 BUILDDIR = build
 TARGET = SMS
 
+# => For test unit 
+TESTDIR = tests
+TESTBIN = $(TESTDIR)/run_tests
+
 # Source and object files
 SRCS = $(wildcard $(SRCDIR)/*.c)
 OBJS = $(patsubst $(SRCDIR)/%.c,$(BUILDDIR)/%.o,$(SRCS))
@@ -34,3 +38,16 @@ clean:
 # Run program
 run: $(TARGET)
 	./$(TARGET)
+
+# =========== Unit test target ===========
+
+test: $(TESTBIN)
+	./$(TESTBIN)
+
+# Compile tests (do NOT include main.c)
+$(TESTBIN): $(TESTDIR)/test_students.c src/student.c src/utils.c
+	$(CC) $(CFLAGS) $(TESTDIR)/test_students.c src/student.c src/utils.c -o $(TESTBIN)
+
+# Clean up
+clean:
+	rm -rf $(BUILDDIR) $(TARGET) $(TESTBIN)

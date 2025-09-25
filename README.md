@@ -1,6 +1,6 @@
 # Student Management System
 
-A robust console-based Student Management System implemented in C, featuring complete CRUD operations with persistent binary file storage. Perfect for learning C programming concepts including file I/O, data structures, and modular design patterns.
+A robust Terminal-based Student Management System implemented in C, featuring complete CRUD operations with persistent binary file storage. Perfect for learning C programming concepts including file I/O, data structures, and modular design patterns.
 
 
 <div align="left">
@@ -14,12 +14,12 @@ A robust console-based Student Management System implemented in C, featuring com
 
 ```bash
 # Clone and build
-git clone https://github.com/yourusername/student-management-system-c.git
-cd student-management-system-c
+git clone https://github.com/othey47/SMS-Project-C.git
+cd SMS-PROJECT-C
 make
 
 # Run the application
-./student_manager
+./SMS
 ```
 
 ## ✨ Features
@@ -33,20 +33,6 @@ make
 - **✏️ Update**: Modify existing student information
 - **🗑️ Delete**: Remove student records safely
 
-## 🛠️ Installation
-
-### Method 1: Using Make (Recommended)
-
-```bash
-git clone https://github.com/yourusername/student-management-system-c.git
-cd student-management-system-c
-make
-```
-
-### Method 2: Manual Compilation
-
-```bash
-gcc -Wall -Wextra -std=c99 -o student_manager src/main.c src/student.c src/utils.c -I include
 ```
 ## 🎯 Usage
 
@@ -156,7 +142,7 @@ gcc -o tests/test_students tests/test_students.c src/student.c src/utils.c -I in
 make debug
 
 # Run with debugger
-gdb ./student_manager
+gdb ./SMS
 ```
 
 ## 🔧 Configuration
@@ -213,33 +199,9 @@ The system handles various error conditions gracefully:
 - [ ] Web interface
 - [ ] Network synchronization
 
-## 🤝 Contributing
-
-We welcome contributions! Please follow these steps:
-
-1. **Fork** the repository
-2. **Create** a feature branch: `git checkout -b feature/amazing-feature`
-3. **Commit** your changes: `git commit -m 'Add amazing feature'`
-4. **Test** your changes thoroughly
-5. **Push** to the branch: `git push origin feature/amazing-feature`
-6. **Open** a Pull Request
-
-### Contribution Guidelines
-
-- Follow existing code style and formatting
-- Add unit tests for new features
-- Update documentation as needed
-- Ensure all tests pass before submitting
 
 ## 📝 License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-
-## 🙏 Acknowledgments
-
-- **Educational Purpose**: Designed for C programming education
-- **Community**: Thanks to all contributors and users
-- **Inspiration**: Classic console-based database applications
 
 ---
 
