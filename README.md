@@ -3,7 +3,7 @@
 A robust console-based Student Management System implemented in C, featuring complete CRUD operations with persistent binary file storage. Perfect for learning C programming concepts including file I/O, data structures, and modular design patterns.
 
 
-<div align="center">
+<div align="left">
 
 **Database:** Files | **Language:** C | **Status:** Not Complete
 
