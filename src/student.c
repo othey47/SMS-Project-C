@@ -567,7 +567,7 @@ void updateStudent()
    do
    {
         // 1. Show current value & ask for new input.
-        printf("Current Grade: %.2f\nEnter new Grade (or -1 to keep current): ", s->grade);
+        printf("Current Grade: %f\nEnter new Grade (or -1 to keep current): ", s->grade);
 
         // 2.Read input safely.
         float newGrade;
